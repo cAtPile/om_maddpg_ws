@@ -1,0 +1,98 @@
+# =============================================================================
+# OM-MADDPG 无人机集群协同围捕 — 全局配置
+# =============================================================================
+
+env:
+  # 任务区域 (m)
+  area_size: [2000, 2000]
+  bounds: [-1000, 1000, -1000, 1000]    # x_min, x_max, y_min, y_max
+  dt: 0.05                                # 仿真步长 (s)
+  max_step: 100                           # 单回合最大步数
+
+pursuer:
+  num: 3
+  v_max: 100                              # m/s
+  a_max: 40                               # m/s^2
+  init_distance: 900                      # 初始分布圆半径 (m)，围绕目标
+
+target:
+  v_max: 120                              # m/s
+  a_max: 50                               # m/s^2
+  init_position: [0, 0]
+  init_heading: null                      # null = 随机
+  escape_policy: "random"                 # random | apf | ddpg
+
+obstacle:
+  num: 3
+  radius_range: [100, 150]                # m, 随机采样
+  speed: 30                               # m/s (仅动态)
+  dynamic: false                          # true = 动态障碍物
+
+lidar:
+  n_channels: 16
+  d_max: 200                              # m, 最大探测距离
+
+task:
+  d_limit: 750                            # 包围距离阈值 (m)
+  d_capture: 300                          # 捕获距离阈值 (m)
+  r_safe: 10                              # 安全距离 (m)
+  r_uav: 5                                # 无人机半径 (m)
+  angle_coverage_threshold: 300           # 度, 角度覆盖阈值
+
+reward:
+  mu_near: 1.0
+  mu_stage: 1.0
+  mu_finish: 100.0
+  mu_safe: 2.0
+  mu_time: -0.1
+
+# =============================================================================
+# LSTM-PINN 对手建模参数 (Phase 2 使用)
+# =============================================================================
+lstm_pinn:
+  seq_length: 10                          # 历史时间步
+  lstm_hidden: [128, 64]                  # 堆叠 LSTM 隐层
+  fc_hidden: 32
+  dropout: 0.2
+  lam_data: 0.7
+  lam_phy: 0.25
+  lam_smooth: 0.05
+  lr: 0.001
+  batch_size: 64
+  max_epochs: 100
+  train_ratio: 0.7
+  val_ratio: 0.15
+  # test_ratio = 1 - train_ratio - val_ratio = 0.15
+
+# =============================================================================
+# OM-MADDPG / MADDPG / DDPG 训练参数 (Phase 3 使用)
+# =============================================================================
+algorithm:
+  gamma: 0.9                              # 折扣因子
+  tau: 0.01                               # 软更新系数
+  buffer_size: 10000                      # 经验回放池大小
+  batch_size: 128
+  actor_lr: 0.001
+  critic_lr: 0.002
+  max_episodes: 5000
+  optimizer: "adam"
+
+  # 探索噪声 (OU 噪声)
+  ou_theta: 0.15
+  ou_sigma: 0.3
+  ou_mu: 0.0
+  noise_decay: 0.9995                     # 每回合衰减系数
+
+  # Actor 网络
+  actor_hidden: [256, 128]
+
+  # Critic 网络
+  critic_hidden: [256, 128]
+
+# =============================================================================
+# 评估参数
+# =============================================================================
+eval:
+  n_episodes: 100                         # 评估回合数
+  render: false                           # 是否渲染
+  save_gif: false

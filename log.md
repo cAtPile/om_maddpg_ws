@@ -38,3 +38,20 @@
         question：轨迹生成器的规模如何确定
         talk:下班
         
+7-21
+[16:10] plan:先做纯python可收敛性验证
+        prompt：阅读/home/a/ros2_ws/src/om_maddpg_ws/ref/om-MADDPG.md参考论文，我要先做一个纯python的可收敛性验证，请给我一个技术路线的验证方案
+
+[17:11] venv:构建了环境
+
+[21:27] env: 成功构建测试环境
+        plan: 构建预训练
+        prompt：完成LSTM-PINN 对手建模模块（`models/`）建立，并构建冒烟测试版本
+
+[23:08] model: 完成验证算法的构建
+        talk：下班
+
+7-22
+object: 1.进行预训练
+        2.真实飞行器预训练
+        3.确定预训练方案

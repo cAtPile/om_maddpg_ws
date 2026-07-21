@@ -1,0 +1,14 @@
+[project]
+name = "LSTM-PINN_convergence_verify"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "torch>=2.0",
+    "gymnasium>=0.29",
+    "pyyaml",
+    "matplotlib",
+    "tensorboard",
+    "tqdm",
+]
